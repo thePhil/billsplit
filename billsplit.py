@@ -8,6 +8,7 @@ import download_rates
 def billsplit(bills):
 
     rateConverter = download_rates.RateConverter()
+    rateConverter.receiveECBRates()
 
     # get all distinct persons
     persons = set()

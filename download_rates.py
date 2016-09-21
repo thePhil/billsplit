@@ -36,7 +36,7 @@ class RateConverter:
         billDateDate = datetime.datetime.strptime(billDate, "%Y-%M-%d")
         dd = timedelta(days=1)
 
-        # Look for conversion rate on day itself or at most 7 days in advance
+        # Look for conversion rate on day itself or at most 7 days in the past 
         tries = 0
         while (not billDate in self.currencies) and tries < 7:
             billDateDate = billDateDate - dd
@@ -44,7 +44,7 @@ class RateConverter:
             tries += 1
 
         if tries == 7:
-            raise IOError("Could not find conversion in week before date")
+            raise IOError("Could not find conversion in week before the date")
 
         rate = self.currencies[billDate][billCurrency]
 
@@ -61,8 +61,10 @@ class RateConverter:
 
     def receiveECBRates(self):
         ecbURL = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml"
+
         # download rates from ECB
         try:
+            print ("Receiving exchange rates of the last 90 days from ECB\n%s\n\n" % (ecbURL))
             urllib.urlretrieve(ecbURL, self.rates_filename)
             return 0
         except IOError:
